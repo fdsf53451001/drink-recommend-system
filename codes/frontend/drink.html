@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>健康手搖新生活</title>
+    <style>
+        body {
+            background-image: url('https://www.superlab.com.tw/wp-content/uploads/2019/08/39179210_l-1.jpg');
+            background-size: 100%;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: start; /* Align items at the start (top) */
+        }
+
+        h2 {
+            text-shadow: 0.1em 0.1em #ffffff
+        }
+
+        section {
+            order: 2; /* Default order for sections */
+        }
+
+        #product-container {
+            order: 1; /* Move product section to the top */
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #f2390b;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 9px 9px #999;
+        }
+
+        .button:hover {background-color: #b80e0e}
+
+        .button:active {
+            background-color: #b80e0e;
+            box-shadow: 5px 5px #666;
+            transform: translateY(4px);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div>
+
+        <header class="p-4 md:p-6 bg-white shadow-lg rounded-lg mb-8"  style="opacity: 0.8;">
+            <div class="flex items-center justify-center">
+                <label for="location" class="mr-2 font-bold text-lg md:text-xl">
+                    Select Location:
+                </label>
+                <select id="location"
+                    class="bg-white border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2">
+                    <option>
+                        全部
+                    </option>
+                    <option>
+                        松山區
+                    </option>
+                    <option>
+                        信義區
+                    </option>
+                    <option>
+                        大安區
+                    </option>
+                    <option>
+                        中山區
+                    </option>
+                    <option>
+                        中正區
+                    </option>
+                    <option>
+                        大同區
+                    </option>
+                    <option>
+                        萬華區
+                    </option>
+                    <option>
+                        文山區
+                    </option>
+                    <option>
+                        南港區
+                    </option>
+                    <option>
+                        內湖區
+                    </option>
+                    <option>
+                        士林區
+                    </option>
+                    <option>
+                        北投區
+                    </option>
+                </select>
+            </div>
+        </header>
+        <main class="grid grid-cols-3 gap-4 md:gap-8 mx-auto p-4 md:p-6 max-w-7xl">
+            <section class="grid gap-4 md:gap-8">
+                <h2 class="font-bold text-2xl md:text-3xl">
+                    Select a Company
+                </h2>
+                <div id="company-container" class="border text-card-foreground bg-white shadow-lg rounded-lg p-6"
+                    data-v0-t="card" style="opacity: 0.8;">
+                    <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                        <h3 id="location-name" class="text-2xl font-semibold leading-none tracking-tight">
+                            Companies
+                        </h3>
+                    </div>
+                    <div id="company-list" class="p-6 overflow-x-auto" style="max-height: calc(50vh - 50px); overflow: auto;">
+                        <!-- Company data will be inserted here -->
+                    </div>
+                </div>
+            </section>
+            <section class="grid gap-4 md:gap-8">
+                <h2 class="font-bold text-2xl md:text-3xl">
+                    Select a Product
+                </h2>
+                <div id="product-container" class="border text-card-foreground bg-white shadow-lg rounded-lg p-6"
+                    data-v0-t="card" style="opacity: 0.8;">
+                    <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                        <h3 id="company-name" class="text-2xl font-semibold leading-none tracking-tight">
+                            Products
+                        </h3>
+                    </div>
+                    <div id="product-list" class="p-6 overflow-x-auto" style="max-height: calc(50vh - 50px); overflow: auto;">
+                        <!-- Product data will be inserted here -->
+                    </div>
+                </div>
+            </section>
+            <section class="grid gap-4 md:gap-8">
+                <h2 class="font-bold text-2xl md:text-3xl">
+                    Product Details
+                </h2>
+                <div id="product-details-container"
+                    class="border text-card-foreground bg-white shadow-lg rounded-lg p-6" data-v0-t="card" style="opacity: 0.8;">
+                    <div class="flex flex-col space-y-1.5 p-6 pb-4">
+                        <h3 id="product-name" class="text-2xl font-semibold leading-none tracking-tight">
+                            Product Name
+                        </h3>
+                        <p id="product-calories" class="text-lg leading-6"></p>
+                        <p id="product-content" class="text-lg leading-6"></p>
+                        <p id="product-price" class="text-lg leading-6"></p>
+                    </div>
+                    <div class="flex justify-end mt-4"></div>
+                </div>
+            </section>
+        </main>
+        <div  style="position: absolute; right: 50px; bottom: 50px;">
+            <button class="button" onclick="getRandomDrink()">random drink</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const locationDropdown = document.getElementById('location');
+            locationDropdown.addEventListener('change', handleLocationChange);
+
+            function handleLocationChange() {
+                const locationNameElement = document.getElementById('location-name');
+                const selectedLocation = locationDropdown.value;
+                locationNameElement.textContent = selectedLocation;
+                let payload = {};
+                if (selectedLocation !== '全部') {
+                    payload = { "place": selectedLocation };
+                }
+
+                // Fetch company data based on the selected location
+                fetch('https://b2qlogyznk.execute-api.us-east-1.amazonaws.com/DrinkGetStores', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the UI with the received company data
+                        updateCompanyUI(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            function updateCompanyUI(data) {
+                const companyListContainer = document.getElementById('company-list');
+                const rows = data.rows;
+
+                // Clear previous content
+                companyListContainer.innerHTML = '';
+
+                // Iterate over rows and create HTML elements
+                rows.forEach(row => {
+                    const [companyName] = row;
+
+                    const companyElement = document.createElement('div');
+                    companyElement.classList.add('text-sm', 'text-gray-900');
+                    companyElement.textContent = companyName;
+
+                    // Add click event listener to each company element
+                    companyElement.addEventListener('click', () => {
+                        handleCompanyClick(companyName);
+                    });
+
+                    companyListContainer.appendChild(companyElement);
+                });
+            }
+
+            function handleCompanyClick(companyName) {
+                const companyNameElement = document.getElementById('company-name');
+                companyNameElement.textContent = companyName;
+                // Fetch product data based on the selected company
+                fetch('https://b2qlogyznk.execute-api.us-east-1.amazonaws.com/DrinkGetDrinks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "store_name": companyName }),
+                })
+                    .then(response => response.json())
+                    .then(productData => {
+                        // Update the UI with the received product data
+                        updateProductUI(productData);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            function updateProductUI(productData) {
+                const productListContainer = document.getElementById('product-list');
+                const rows = productData.rows;
+
+                // Clear previous content
+                productListContainer.innerHTML = '';
+
+                // Iterate over rows and create HTML elements
+                rows.forEach(row => {
+                    const [productName] = row;
+
+                    const productElement = document.createElement('div');
+                    productElement.classList.add('text-sm', 'text-gray-900', 'cursor-pointer');
+                    productElement.textContent = productName;
+
+                    // Add click event listener to each product element
+                    productElement.addEventListener('click', () => {
+                        handleProductClick(row);
+                    });
+
+                    productListContainer.appendChild(productElement);
+                });
+            }
+
+            function handleProductClick(productData) {
+                const [productName, calories, content, price] = productData;
+
+                // Update product details in the UI
+                const productNameElement = document.getElementById('product-name');
+                const productCaloriesElement = document.getElementById('product-calories');
+                const productContentElement = document.getElementById('product-content');
+                const productPriceElement = document.getElementById('product-price');
+
+                productNameElement.textContent = productName;
+                productCaloriesElement.textContent = `卡路里: ${calories}`;
+                productContentElement.textContent = `內容物: ${content}`;
+                productPriceElement.textContent = `價格: ${price}`;
+            }
+
+            handleLocationChange();
+        });
+
+        function getRandomDrink() {
+            // Fetch product data based on the selected company
+            fetch('https://b2qlogyznk.execute-api.us-east-1.amazonaws.com/DrinkGetRandomDrink', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(productData => {
+                const formattedData = productData.rows.map(row => {
+                    return `Company: ${row[0]}\nDrink: ${row[1]}\nPrice: ${row[2]}\nIngredients: ${row[3]}\nCalories: ${row[4]}\n`;
+                }).join('\n\n');
+                
+                alert(formattedData);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
